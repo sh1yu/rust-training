@@ -14,4 +14,7 @@ members = [
     "practice/thread_demo",
     "practice/state_pattern_demo",
     "practice/udp-demo",
+    "practice/rsa-encrypt-demo",
+    "practice/tree-demo",
+    "practice/persist-demo",
 ]
