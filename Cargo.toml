@@ -1,0 +1,17 @@
+[workspace]
+
+members = [
+    "practice/algori",
+    "practice/notify-demo",
+    "practice/simple-http-server",
+    "practice/stack-demo",
+    "practice/rust-gzip-demo",
+    "practice/rust-antlr-demo",
+    "practice/tokio-demo",
+    "practice/http_demo",
+    "practice/hyper_client_demo",
+    "practice/hyper_server_demo",
+    "practice/thread_demo",
+    "practice/state_pattern_demo",
+    "practice/udp-demo",
+]
