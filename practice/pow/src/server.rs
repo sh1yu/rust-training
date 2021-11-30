@@ -1,14 +1,10 @@
 use anyhow::Result;
 use futures::Stream;
-use pow::pb::pow_builder_server::*;
-use pow::pb::*;
-use std::pin::Pin;
-use std::sync::Arc;
-use std::{collections::HashMap, thread};
+use pow::pb::{pow_builder_server::*, *};
+use std::{collections::HashMap, pin::Pin, sync::Arc, thread};
 use tokio::sync::{mpsc, RwLock};
 use tokio_stream::wrappers::ReceiverStream;
-use tonic::transport::Server;
-use tonic::{Request, Response, Status};
+use tonic::{transport::Server, Request, Response, Status};
 
 const CHANNEL_SIZE: usize = 8;
 

@@ -264,6 +264,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "actor"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "tokio 1.14.0",
+]
+
+[[package]]
 name = "adler"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -796,6 +804,10 @@ name = "fuchsia-zircon-sys"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3dcaa9ae7725d12cdb85b3ad99a434db70b468c09ded17e012d86b5c1010f7a7"
+
+[[package]]
+name = "futures"
+version = "0.1.0"
 
 [[package]]
 name = "futures"
@@ -1708,7 +1720,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "blake3",
- "futures",
+ "futures 0.3.18",
  "prost",
  "tokio 1.14.0",
  "tokio-stream",
@@ -2775,7 +2787,7 @@ dependencies = [
  "async-trait",
  "cfg-if 1.0.0",
  "enum-as-inner",
- "futures",
+ "futures 0.3.18",
  "idna",
  "lazy_static",
  "log",
@@ -2793,7 +2805,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "710f593b371175db53a26d0b38ed2978fafb9e9e8d3868b1acd753ea18df0ceb"
 dependencies = [
  "cfg-if 0.1.10",
- "futures",
+ "futures 0.3.18",
  "ipconfig",
  "lazy_static",
  "log",

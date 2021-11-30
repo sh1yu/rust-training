@@ -18,4 +18,6 @@ members = [
     "practice/tree-demo",
     "practice/persist-demo",
     "practice/pow",
+    "practice/actor",
+    "practice/futures",
 ]
