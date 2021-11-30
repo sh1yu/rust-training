@@ -1,8 +1,9 @@
 use crate::pb::{Block, BlockHash};
+use rayon::prelude::*;
 
-pub const PREFIX_ZERO: &[u8] = &[0, 0];
+pub const PREFIX_ZERO: &[u8] = &[0, 0, 0];
 
-pub fn pow(block: Block) -> Option<BlockHash> {
+pub fn pow_v1(block: Block) -> Option<BlockHash> {
     let hasher = blake3_base_hash(&block.data);
     let nonce = (0..u32::MAX).find(|n| {
         let hash = blake3_hash(hasher.clone(), *n);
@@ -12,7 +13,21 @@ pub fn pow(block: Block) -> Option<BlockHash> {
     nonce.map(|n| {
         let id = get_block_id(&block);
         let hash = blake3_hash(hasher, n);
-        BlockHash { id, hash }
+        BlockHash { id, hash, nonce: n }
+    })
+}
+
+pub fn pow_v2(block: Block) -> Option<BlockHash> {
+    let hasher = blake3_base_hash(&block.data);
+    let nonce = (0..u32::MAX).into_par_iter().find_any(|n| {
+        let hash = blake3_hash(hasher.clone(), *n);
+        &hash[..PREFIX_ZERO.len()] == PREFIX_ZERO
+    });
+
+    nonce.map(|n| {
+        let id = get_block_id(&block);
+        let hash = blake3_hash(hasher, n);
+        BlockHash { id, hash, nonce: n }
     })
 }
 

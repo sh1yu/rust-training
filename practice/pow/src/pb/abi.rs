@@ -23,6 +23,8 @@ pub struct BlockHash {
     pub id: ::prost::alloc::vec::Vec<u8>,
     #[prost(bytes = "vec", tag = "2")]
     pub hash: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint32, tag = "3")]
+    pub nonce: u32,
 }
 #[doc = r" Generated client implementations."]
 pub mod pow_builder_client {

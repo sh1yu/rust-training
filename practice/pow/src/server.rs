@@ -100,7 +100,7 @@ async fn start_server(addr: &str) -> Result<()> {
 
     thread::spawn(move || {
         while let Some(block) = rx1.blocking_recv() {
-            let result = pow::powork::pow(block);
+            let result = pow::powork::pow_v2(block);
             tx2.blocking_send(result).unwrap();
         }
     });
