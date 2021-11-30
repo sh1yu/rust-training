@@ -71,7 +71,7 @@ async fn main() -> Result<()> {
     assert_eq!(result, 43);
 
     let pid1 = pid.clone();
-    let result = pid.send(100).await.unwrap();
+    let result = pid1.send(100).await.unwrap();
     assert_eq!(result, 101);
 
     Ok(())

@@ -26,9 +26,8 @@ pub struct BlockHash {
 }
 #[doc = r" Generated client implementations."]
 pub mod pow_builder_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    #![allow(unused_variables, dead_code, missing_docs)]
     use tonic::codegen::*;
-    #[derive(Debug, Clone)]
     pub struct PowBuilderClient<T> {
         inner: tonic::client::Grpc<T>,
     }
@@ -46,43 +45,17 @@ pub mod pow_builder_client {
     impl<T> PowBuilderClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::ResponseBody: Body + Send + 'static,
+        T::ResponseBody: Body + HttpBody + Send + 'static,
         T::Error: Into<StdError>,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+        <T::ResponseBody as HttpBody>::Error: Into<StdError> + Send,
     {
         pub fn new(inner: T) -> Self {
             let inner = tonic::client::Grpc::new(inner);
             Self { inner }
         }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> PowBuilderClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<http::Request<tonic::body::BoxBody>>>::Error:
-                Into<StdError> + Send + Sync,
-        {
-            PowBuilderClient::new(InterceptedService::new(inner, interceptor))
-        }
-        #[doc = r" Compress requests with `gzip`."]
-        #[doc = r""]
-        #[doc = r" This requires the server to support it otherwise it might respond with an"]
-        #[doc = r" error."]
-        pub fn send_gzip(mut self) -> Self {
-            self.inner = self.inner.send_gzip();
-            self
-        }
-        #[doc = r" Enable decompressing responses with `gzip`."]
-        pub fn accept_gzip(mut self) -> Self {
-            self.inner = self.inner.accept_gzip();
-            self
+        pub fn with_interceptor(inner: T, interceptor: impl Into<tonic::Interceptor>) -> Self {
+            let inner = tonic::client::Grpc::with_interceptor(inner, interceptor);
+            Self { inner }
         }
         pub async fn subscribe(
             &mut self,
@@ -116,10 +89,22 @@ pub mod pow_builder_client {
             self.inner.unary(request.into_request(), path, codec).await
         }
     }
+    impl<T: Clone> Clone for PowBuilderClient<T> {
+        fn clone(&self) -> Self {
+            Self {
+                inner: self.inner.clone(),
+            }
+        }
+    }
+    impl<T> std::fmt::Debug for PowBuilderClient<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "PowBuilderClient {{ ... }}")
+        }
+    }
 }
 #[doc = r" Generated server implementations."]
 pub mod pow_builder_server {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    #![allow(unused_variables, dead_code, missing_docs)]
     use tonic::codegen::*;
     #[doc = "Generated trait containing gRPC methods that should be implemented for use with PowBuilderServer."]
     #[async_trait]
@@ -127,6 +112,7 @@ pub mod pow_builder_server {
         #[doc = "Server streaming response type for the Subscribe method."]
         type SubscribeStream: futures_core::Stream<Item = Result<super::BlockHash, tonic::Status>>
             + Send
+            + Sync
             + 'static;
         async fn subscribe(
             &self,
@@ -140,31 +126,24 @@ pub mod pow_builder_server {
     #[derive(Debug)]
     pub struct PowBuilderServer<T: PowBuilder> {
         inner: _Inner<T>,
-        accept_compression_encodings: (),
-        send_compression_encodings: (),
     }
-    struct _Inner<T>(Arc<T>);
+    struct _Inner<T>(Arc<T>, Option<tonic::Interceptor>);
     impl<T: PowBuilder> PowBuilderServer<T> {
         pub fn new(inner: T) -> Self {
             let inner = Arc::new(inner);
-            let inner = _Inner(inner);
-            Self {
-                inner,
-                accept_compression_encodings: Default::default(),
-                send_compression_encodings: Default::default(),
-            }
+            let inner = _Inner(inner, None);
+            Self { inner }
         }
-        pub fn with_interceptor<F>(inner: T, interceptor: F) -> InterceptedService<Self, F>
-        where
-            F: tonic::service::Interceptor,
-        {
-            InterceptedService::new(Self::new(inner), interceptor)
+        pub fn with_interceptor(inner: T, interceptor: impl Into<tonic::Interceptor>) -> Self {
+            let inner = Arc::new(inner);
+            let inner = _Inner(inner, Some(interceptor.into()));
+            Self { inner }
         }
     }
-    impl<T, B> tonic::codegen::Service<http::Request<B>> for PowBuilderServer<T>
+    impl<T, B> Service<http::Request<B>> for PowBuilderServer<T>
     where
         T: PowBuilder,
-        B: Body + Send + 'static,
+        B: HttpBody + Send + Sync + 'static,
         B::Error: Into<StdError> + Send + 'static,
     {
         type Response = http::Response<tonic::body::BoxBody>;
@@ -193,17 +172,17 @@ pub mod pow_builder_server {
                             Box::pin(fut)
                         }
                     }
-                    let accept_compression_encodings = self.accept_compression_encodings;
-                    let send_compression_encodings = self.send_compression_encodings;
                     let inner = self.inner.clone();
                     let fut = async move {
+                        let interceptor = inner.1;
                         let inner = inner.0;
                         let method = SubscribeSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
-                        let mut grpc = tonic::server::Grpc::new(codec).apply_compression_config(
-                            accept_compression_encodings,
-                            send_compression_encodings,
-                        );
+                        let mut grpc = if let Some(interceptor) = interceptor {
+                            tonic::server::Grpc::with_interceptor(codec, interceptor)
+                        } else {
+                            tonic::server::Grpc::new(codec)
+                        };
                         let res = grpc.server_streaming(method, req).await;
                         Ok(res)
                     };
@@ -221,17 +200,17 @@ pub mod pow_builder_server {
                             Box::pin(fut)
                         }
                     }
-                    let accept_compression_encodings = self.accept_compression_encodings;
-                    let send_compression_encodings = self.send_compression_encodings;
                     let inner = self.inner.clone();
                     let fut = async move {
+                        let interceptor = inner.1.clone();
                         let inner = inner.0;
                         let method = SubmitSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
-                        let mut grpc = tonic::server::Grpc::new(codec).apply_compression_config(
-                            accept_compression_encodings,
-                            send_compression_encodings,
-                        );
+                        let mut grpc = if let Some(interceptor) = interceptor {
+                            tonic::server::Grpc::with_interceptor(codec, interceptor)
+                        } else {
+                            tonic::server::Grpc::new(codec)
+                        };
                         let res = grpc.unary(method, req).await;
                         Ok(res)
                     };
@@ -242,7 +221,7 @@ pub mod pow_builder_server {
                         .status(200)
                         .header("grpc-status", "12")
                         .header("content-type", "application/grpc")
-                        .body(empty_body())
+                        .body(tonic::body::BoxBody::empty())
                         .unwrap())
                 }),
             }
@@ -251,16 +230,12 @@ pub mod pow_builder_server {
     impl<T: PowBuilder> Clone for PowBuilderServer<T> {
         fn clone(&self) -> Self {
             let inner = self.inner.clone();
-            Self {
-                inner,
-                accept_compression_encodings: self.accept_compression_encodings,
-                send_compression_encodings: self.send_compression_encodings,
-            }
+            Self { inner }
         }
     }
     impl<T: PowBuilder> Clone for _Inner<T> {
         fn clone(&self) -> Self {
-            Self(self.0.clone())
+            Self(self.0.clone(), self.1.clone())
         }
     }
     impl<T: std::fmt::Debug> std::fmt::Debug for _Inner<T> {
