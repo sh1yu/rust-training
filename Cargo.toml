@@ -17,4 +17,5 @@ members = [
     "practice/rsa-encrypt-demo",
     "practice/tree-demo",
     "practice/persist-demo",
+    "practice/pow",
 ]
