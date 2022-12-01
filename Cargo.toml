@@ -25,5 +25,6 @@ members = [
     "practice/memalloc_test",
     "practice/borrow_test",
     "practice/mystring_test",
-    "practice/async_trait_test"
+    "practice/async_trait_test",
+    "practice/cpu_simulate"
 ]
