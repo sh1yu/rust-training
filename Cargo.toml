@@ -20,4 +20,10 @@ members = [
     "practice/pow",
     "practice/actor",
     "practice/futures",
+    "practice/vtable_test",
+    "practice/deref_test",
+    "practice/memalloc_test",
+    "practice/borrow_test",
+    "practice/mystring_test",
+    "practice/async_trait_test"
 ]
